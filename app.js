@@ -59,40 +59,36 @@ const app = document.querySelector("#app");
 function renderHome() {
   stopAudio();
   state.screen = "home";
+  document.body.classList.add("front-page-mode");
   app.innerHTML = `
-    <section class="screen hero">
-      <div class="hero-copy">
-        <div class="free-badge"><span class="free-dot"></span>100% free · No registration required</div>
-        <p class="eyebrow">SORA English listening assessment</p>
-        <h1>Hear English.<br />Discover your level.</h1>
-        <p>Experience 10 real-life listening questions created by SORA’s international teaching team. Your result is instant, free, and designed to show you the clearest next step.</p>
-        <div class="hero-actions">
-          <button class="button primary" id="start-button">Take the free assessment <span aria-hidden="true">→</span></button>
-          <a class="button secondary" href="https://forms.office.com/r/qjpXvnSNDX" target="_blank" rel="noreferrer">Book a free trial lesson</a>
-        </div>
-        <div class="hero-note">
-          <span>◷ About 8 minutes</span>
-          <span>🎧 Headphones recommended</span>
-          <span>✓ Instant result</span>
-        </div>
-        <div class="trust-line"><strong>World English, taught by world-class educators.</strong><br />Learn practical English from experienced international teachers in a supportive community at SORA.</div>
+    <section class="screen visual-front-page" aria-label="SORA free English listening assessment">
+      <div class="front-page-canvas">
+        <img src="public/sora-listening-front-page.png" alt="SORA International Academy free English listening assessment. Test your English listening and know your level in eight minutes." />
+        <a class="front-hotspot hotspot-about" href="https://sora.business/" target="_blank" rel="noreferrer"><span>About SORA</span></a>
+        <a class="front-hotspot hotspot-header-trial" href="https://forms.office.com/r/qjpXvnSNDX" target="_blank" rel="noreferrer"><span>Book a free trial lesson</span></a>
+        <button class="front-hotspot hotspot-start" id="start-button"><span>Start free assessment</span></button>
+        <a class="front-hotspot hotspot-trial" href="https://forms.office.com/r/qjpXvnSNDX" target="_blank" rel="noreferrer"><span>Book a free trial lesson</span></a>
+        <a class="front-hotspot hotspot-line" href="https://line.me/R/msg/text/?Hello%20SORA!%20I%20would%20like%20to%20learn%20more%20about%20your%20English%20courses%20and%20book%20a%20free%20trial%20lesson." target="_blank" rel="noreferrer"><span>Add SORA on LINE</span></a>
       </div>
-      <div class="hero-art" aria-label="SORA cloud mascot">
-        <div class="floating-card one"><span>🎧</span> Free listening assessment</div>
-        <img src="public/mascot/cloud_wink_clean.png" alt="SORA cloud mascot winking" />
-        <div class="floating-card two"><span>✨</span> Discover your next step</div>
+      <div class="front-mobile-actions" aria-label="Assessment actions">
+        <button class="button primary" id="mobile-start-button">🎧 Start Free Assessment</button>
+        <a class="button secondary" href="https://forms.office.com/r/qjpXvnSNDX" target="_blank" rel="noreferrer">Book a Free Trial</a>
+        <a class="button line" href="https://line.me/R/msg/text/?Hello%20SORA!%20I%20would%20like%20to%20learn%20more%20about%20your%20English%20courses." target="_blank" rel="noreferrer">Open LINE</a>
       </div>
     </section>`;
-  document.querySelector("#start-button").addEventListener("click", () => {
+  const startAssessment = () => {
     state.current = 0;
     state.answers.fill(null);
     renderQuestion();
-  });
+  };
+  document.querySelector("#start-button").addEventListener("click", startAssessment);
+  document.querySelector("#mobile-start-button").addEventListener("click", startAssessment);
 }
 
 function renderQuestion() {
   stopAudio();
   state.screen = "question";
+  document.body.classList.remove("front-page-mode");
   const q = questions[state.current];
   const selected = state.answers[state.current];
   const pictureClass = q.icons ? " picture-answers" : "";
@@ -186,6 +182,7 @@ function getResult(score) {
 function renderResults() {
   stopAudio();
   state.screen = "results";
+  document.body.classList.remove("front-page-mode");
   const score = state.answers.reduce((total, answer, i) => total + Number(answer === questions[i].answer), 0);
   const result = getResult(score);
   const subject = encodeURIComponent("My SORA English Listening Assessment result");

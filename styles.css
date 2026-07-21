@@ -37,6 +37,23 @@ a { color: inherit; }
 .header-trial { padding: 11px 17px; color: white; background: var(--blue); border-radius: 11px; font-size: 13px; }
 
 main { width: min(1120px, calc(100% - 40px)); min-height: calc(100vh - 170px); margin: 0 auto; display: grid; align-items: center; padding: 28px 0 62px; }
+.front-page-mode { background: white; }
+.front-page-mode .site-header,
+.front-page-mode footer { display: none; }
+.front-page-mode main { display: block; width: 100%; min-height: 100vh; padding: 0; }
+.visual-front-page { width: 100%; }
+.front-page-canvas { position: relative; width: min(1144px, 100%); margin: 0 auto; }
+.front-page-canvas > img { display: block; width: 100%; height: auto; }
+.front-hotspot { position: absolute; z-index: 2; display: block; padding: 0; border: 0; cursor: pointer; border-radius: 12px; background: transparent; }
+.front-hotspot span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; }
+.front-hotspot:hover { background: #ffffff18; box-shadow: 0 0 0 3px #ffffff80; }
+.front-hotspot:focus-visible { outline: 4px solid #ffb000; outline-offset: 3px; }
+.hotspot-about { left: 63.2%; top: 2.5%; width: 11.6%; height: 4.5%; }
+.hotspot-header-trial { left: 76%; top: 2%; width: 21%; height: 5.2%; }
+.hotspot-start { left: 3.5%; top: 46.5%; width: 27.8%; height: 5.6%; }
+.hotspot-trial { left: 32.8%; top: 46.5%; width: 18.5%; height: 5.6%; }
+.hotspot-line { left: 17.2%; top: 86.9%; width: 23.5%; height: 4.3%; }
+.front-mobile-actions { display: none; }
 .screen { animation: rise .45s ease both; }
 @keyframes rise { from { opacity: 0; transform: translateY(12px); } }
 
@@ -149,6 +166,10 @@ footer a { color: var(--blue-dark); font-weight: 700; text-decoration: none; }
   .next-step { grid-template-columns: 1fr; text-align: center; }
   .next-icon { margin: auto; }
   footer { flex-direction: column; justify-content: center; padding: 20px 0; }
+  .front-page-mode main { width: 100%; }
+  .front-hotspot { border-radius: 5px; }
+  .front-mobile-actions { display: grid; gap: 10px; padding: 18px 14px 28px; background: white; }
+  .front-mobile-actions .button { width: 100%; }
 }
 
 @media (prefers-reduced-motion: reduce) {
