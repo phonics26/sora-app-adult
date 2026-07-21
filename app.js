@@ -3,7 +3,7 @@ const questions = [
     prompt: "Listen to the word and choose the correct picture.",
     choices: ["Apple", "Chair", "Dog", "Table"],
     icons: ["🍎", "🪑", "🐶", "▱"],
-    answer: 2
+    answer: 1
   },
   {
     prompt: "Listen to the word and choose the correct picture.",
