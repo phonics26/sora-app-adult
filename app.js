@@ -56,6 +56,12 @@ const questions = [
 const state = { screen: "home", current: 0, answers: Array(questions.length).fill(null), audio: null };
 const app = document.querySelector("#app");
 
+const SUPABASE_URL = "https://iuazjlwhzcbbrihfypqn.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_wb1AkV90uiIweEb4zK22yw_mg_z0lV2";
+const LINE_LOGIN_CHANNEL_ID = "2010793604";
+const LINE_CALLBACK_URL = SUPABASE_URL + "/functions/v1/line-webhook";
+
+
 function renderHome() {
   stopAudio();
   state.screen = "home";
@@ -186,43 +192,85 @@ function renderResults() {
   document.body.classList.remove("front-page-mode");
   const score = state.answers.reduce((total, answer, i) => total + Number(answer === questions[i].answer), 0);
   const result = getResult(score);
-  const subject = encodeURIComponent("My SORA English Listening Assessment result");
-  const shareText = encodeURIComponent(`I completed the SORA English Listening Assessment and scored ${score}/10, with an estimated Listening GSE range of ${result.gse}. Try it and discover your listening level!`);
-  const lineMessage = encodeURIComponent(`Hello SORA! I completed the free English Listening Assessment.\n\nScore: ${score}/10\nEstimated Listening GSE range: ${result.gse}\nResult: ${result.title}\n\nI would like personal feedback about my result and information about the opportunity for a free trial lesson in Iwakuni or Hiroshima.`);
+  const submissionToken = crypto.randomUUID();
+
   app.innerHTML = `
     <section class="screen assessment-shell">
       <article class="result-card">
         <img class="result-mascot" src="public/mascot/cloud_wink_clean.png" alt="SORA cloud mascot celebrating" />
         <p class="eyebrow">Assessment complete</p>
-        <h2>${result.title}</h2>
-        <div class="score-ring" style="--score:${score * 10}%"><div class="score-value">${score}/10<small>listening score</small></div></div>
-        <p class="eyebrow">Estimated Listening GSE range: ${result.gse}</p>
-        <p class="result-summary">${result.ability}</p>
-        <div class="next-step"><span class="next-icon" aria-hidden="true">🎯</span><div><h3>Area to improve</h3><p>${result.improvement}</p></div></div>
-        <div class="next-step"><span class="next-icon" aria-hidden="true">🧭</span><div><h3>Your strategy</h3><p>${result.strategy}</p></div></div>
-        <div class="next-step"><span class="next-icon" aria-hidden="true">🎧</span><div><h3>Recommended practice</h3><p>${result.practice}</p></div></div>
-        <div class="next-step"><span class="next-icon" aria-hidden="true">⭐</span><div><h3>Your next outcome</h3><p>${result.outcome}</p></div></div>
+        <h2>Your private result is ready</h2>
+        <p class="result-summary">Connect with SORA on LINE to receive your listening score, estimated GSE range, personalized feedback, and recommended practice.</p>
         <div class="next-step">
-          <span class="next-icon" aria-hidden="true">↗</span>
-          <div><h3>Your result is the beginning</h3><p>Listening is one part of your ability. Contact SORA for guidance on your result, or continue with reading, speaking, and writing to build your complete English profile.</p></div>
+          <span class="next-icon" aria-hidden="true">💬</span>
+          <div><h3>Receive it privately on LINE</h3><p>Your result will be sent automatically from SORA's Official LINE account. Add SORA as a friend during the next step if requested.</p></div>
         </div>
+        <p id="line-result-status" class="privacy" role="status"></p>
         <div class="result-actions">
-          <a class="button primary" href="https://forms.office.com/r/qjpXvnSNDX" target="_blank" rel="noreferrer">Book a free trial lesson <span aria-hidden="true">↗</span></a>
-          <a class="button line" href="https://line.me/R/msg/text/?${lineMessage}" target="_blank" rel="noreferrer">💬 Request personal feedback on LINE</a>
-          <a class="button secondary" href="mailto:?subject=${subject}&body=${shareText}">Share my result</a>
+          <button class="button line" id="line-result-button">Receive My Result on LINE</button>
           <button class="button secondary" id="restart-button">Take it again</button>
         </div>
-        <p class="privacy">Your range is a listening-only GSE estimate from this short assessment, not a complete English proficiency certification.</p>
-        <details class="review">
-          <summary>Review my answers</summary>
-          <div class="review-list">
-            ${questions.map((q, i) => `<div class="review-row"><span>Question ${i + 1}: ${q.prompt}</span><span class="${state.answers[i] === q.answer ? "correct" : "incorrect"}">${state.answers[i] === q.answer ? "Correct" : "Review"}</span></div>`).join("")}
-          </div>
-        </details>
+        <p class="privacy">Your answers and result remain private. This is a listening-only GSE estimate, not a complete English proficiency certification.</p>
       </article>
     </section>`;
+
+  document.querySelector("#line-result-button").addEventListener("click", () => {
+    requestLineResult({ score, result, submissionToken });
+  });
   document.querySelector("#restart-button").addEventListener("click", renderHome);
   window.scrollTo(0, 0);
+}
+
+async function requestLineResult({ score, result, submissionToken }) {
+  const button = document.querySelector("#line-result-button");
+  const status = document.querySelector("#line-result-status");
+  button.disabled = true;
+  button.textContent = "Connecting to SORA LINE…";
+  status.textContent = "Saving your private result…";
+
+  try {
+    const response = await fetch(`${SUPABASE_URL}/rest/v1/adult_listening_results`, {
+      method: "POST",
+      headers: {
+        apikey: SUPABASE_PUBLISHABLE_KEY,
+        Authorization: `Bearer ${SUPABASE_PUBLISHABLE_KEY}`,
+        "Content-Type": "application/json",
+        Prefer: "return=minimal"
+      },
+      body: JSON.stringify({
+        submission_token: submissionToken,
+        score,
+        gse_range: result.gse,
+        result_title: result.title,
+        ability: result.ability,
+        improvement: result.improvement,
+        strategy: result.strategy,
+        practice: result.practice,
+        outcome: result.outcome,
+        answers: state.answers,
+        line_delivery_status: "pending_login"
+      })
+    });
+
+    if (!response.ok) throw new Error(`Unable to save result (${response.status})`);
+
+    status.textContent = "Opening LINE securely…";
+    const authorizationUrl = new URL("https://access.line.me/oauth2/v2.1/authorize");
+    authorizationUrl.search = new URLSearchParams({
+      response_type: "code",
+      client_id: LINE_LOGIN_CHANNEL_ID,
+      redirect_uri: LINE_CALLBACK_URL,
+      state: submissionToken,
+      scope: "openid profile",
+      bot_prompt: "aggressive"
+    }).toString();
+    window.location.assign(authorizationUrl.toString());
+  } catch (error) {
+    console.error("LINE result connection failed", error);
+    status.textContent = "We could not connect to LINE. Please try again.";
+    button.disabled = false;
+    button.textContent = "Receive My Result on LINE";
+  }
 }
 
 renderHome();
