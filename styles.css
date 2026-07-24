@@ -175,3 +175,10 @@ footer a { color: var(--blue-dark); font-weight: 700; text-decoration: none; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; }
 }
+
+
+/* Approved 2026 SORA listening landing page */
+.front-page-canvas { width: min(864px, 100%); }
+.hotspot-about-v2 { left: 50.5%; top: 2.4%; width: 14%; height: 3.8%; }
+.hotspot-header-trial-v2 { left: 67.5%; top: 2.2%; width: 29%; height: 4.4%; }
+.hotspot-start-v2 { left: 4.1%; top: 42.9%; width: 50.8%; height: 5.2%; }
