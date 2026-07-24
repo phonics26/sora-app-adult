@@ -69,7 +69,7 @@ function renderHome() {
   app.innerHTML = `
     <section class="screen visual-front-page" aria-label="SORA free English listening assessment">
       <div class="front-page-canvas">
-        <img src="public/sora-listening-front-page-v2.png" alt="SORA International Academy free English listening assessment. Discover your English listening level in about eight minutes and receive your result through LINE." />
+        <img src="public/sora-listening-front-page-ja-final.png" alt="SORA International Academy free English listening assessment. Discover your English listening level in about eight minutes and receive your result through LINE." />
         <a class="front-hotspot hotspot-about-v2" href="https://sora.business/" target="_blank" rel="noreferrer"><span>About SORA</span></a>
         <a class="front-hotspot hotspot-header-trial-v2" href="https://forms.office.com/pages/responsepage.aspx?id=QHgH-eWXGEuyndYQxgb9NhPg1xK4OatBjxCfgrBRSaxURDdFTVFFVUUzVE9MQTZNREhVVVdDNFNQRy4u&route=shorturl" target="_blank" rel="noreferrer"><span>Book a free trial lesson</span></a>
         <button class="front-hotspot hotspot-start-v2" id="start-button"><span>Start free assessment</span></button>
