@@ -173,10 +173,11 @@ function formatTime(seconds) {
 }
 
 function getResult(score) {
-  if (score >= 9) return { title: "Excellent listening", text: "You understand everyday spoken English with strong accuracy. A full assessment can identify the right challenge for your next stage." };
-  if (score >= 7) return { title: "Strong foundation", text: "You follow many everyday words, questions, and short conversations. Your next step is building confidence with longer, faster English." };
-  if (score >= 4) return { title: "A promising start", text: "You understand key information in familiar English. Guided practice can help you follow conversations more naturally." };
-  return { title: "Your English journey starts here", text: "You are beginning to recognize useful spoken English. The right support and regular listening practice will help you progress." };
+  if (score >= 9) return { title: "Confident natural-speech listener", gse: "41–50", ability: "You understand fast, natural speech across different contexts.", improvement: "Adapt more easily to different accents and idiomatic expressions.", strategy: "Listen to natural speech at different speeds and notice common idioms.", practice: "Listen to TED Talks, take notes, and discuss the key points.", outcome: "Understand speech more fluently across different dialects and accents." };
+  if (score >= 7) return { title: "Everyday conversation listener", gse: "31–40", ability: "You can follow everyday conversations spoken at a moderate speed.", improvement: "Build confidence with different accents and implied meanings.", strategy: "Listen to diverse accents and use context to understand meaning.", practice: "Use podcasts with transcripts, take notes, and summarize the key points.", outcome: "Follow conversations with fewer difficulties and recognize implied meanings." };
+  if (score >= 5) return { title: "Developing detail listener", gse: "21–30", ability: "You can catch the main idea in simple conversations.", improvement: "Improve your understanding of important details.", strategy: "Train yourself to listen for key details in short conversations.", practice: "Watch short dialogues and answer comprehension questions.", outcome: "Understand key points and details with improved accuracy." };
+  if (score >= 3) return { title: "Familiar conversation listener", gse: "11–20", ability: "You understand slow, clear speech with frequent pauses.", improvement: "Become more comfortable with connected speech and faster conversations.", strategy: "Listen to repeated phrases and mimic the speaker's rhythm.", practice: "Use simple dialogues and repeat key phrases with a speech-to-text tool.", outcome: "Follow slow, familiar conversations with less repetition." };
+  return { title: "Beginning English listener", gse: "0–10", ability: "You recognize basic words and common greetings.", improvement: "Build your understanding of complete simple sentences.", strategy: "Listen to short, useful phrases several times.", practice: "Listen to greetings, repeat them aloud, and use beginner listening activities.", outcome: "Identify and respond to common greetings." };
 }
 
 function renderResults() {
@@ -186,8 +187,8 @@ function renderResults() {
   const score = state.answers.reduce((total, answer, i) => total + Number(answer === questions[i].answer), 0);
   const result = getResult(score);
   const subject = encodeURIComponent("My SORA English Listening Assessment result");
-  const shareText = encodeURIComponent(`I completed the SORA English Listening Assessment and scored ${score}/10. Try it and discover your listening level!`);
-  const lineMessage = encodeURIComponent(`Hello SORA! I completed the free English Listening Assessment and scored ${score}/10. I would like to learn more about my result and English learning opportunities.`);
+  const shareText = encodeURIComponent(`I completed the SORA English Listening Assessment and scored ${score}/10, with an estimated Listening GSE range of ${result.gse}. Try it and discover your listening level!`);
+  const lineMessage = encodeURIComponent(`Hello SORA! I completed the free English Listening Assessment.\n\nScore: ${score}/10\nEstimated Listening GSE range: ${result.gse}\nResult: ${result.title}\n\nI would like personal feedback about my result and information about the opportunity for a free trial lesson in Iwakuni or Hiroshima.`);
   app.innerHTML = `
     <section class="screen assessment-shell">
       <article class="result-card">
@@ -195,18 +196,23 @@ function renderResults() {
         <p class="eyebrow">Assessment complete</p>
         <h2>${result.title}</h2>
         <div class="score-ring" style="--score:${score * 10}%"><div class="score-value">${score}/10<small>listening score</small></div></div>
-        <p class="result-summary">${result.text}</p>
+        <p class="eyebrow">Estimated Listening GSE range: ${result.gse}</p>
+        <p class="result-summary">${result.ability}</p>
+        <div class="next-step"><span class="next-icon" aria-hidden="true">🎯</span><div><h3>Area to improve</h3><p>${result.improvement}</p></div></div>
+        <div class="next-step"><span class="next-icon" aria-hidden="true">🧭</span><div><h3>Your strategy</h3><p>${result.strategy}</p></div></div>
+        <div class="next-step"><span class="next-icon" aria-hidden="true">🎧</span><div><h3>Recommended practice</h3><p>${result.practice}</p></div></div>
+        <div class="next-step"><span class="next-icon" aria-hidden="true">⭐</span><div><h3>Your next outcome</h3><p>${result.outcome}</p></div></div>
         <div class="next-step">
           <span class="next-icon" aria-hidden="true">↗</span>
           <div><h3>Your result is the beginning</h3><p>Listening is one part of your ability. Contact SORA for guidance on your result, or continue with reading, speaking, and writing to build your complete English profile.</p></div>
         </div>
         <div class="result-actions">
           <a class="button primary" href="https://forms.office.com/r/qjpXvnSNDX" target="_blank" rel="noreferrer">Book a free trial lesson <span aria-hidden="true">↗</span></a>
-          <a class="button line" href="https://line.me/R/msg/text/?${lineMessage}" target="_blank" rel="noreferrer">Open my result in LINE</a>
+          <a class="button line" href="https://line.me/R/msg/text/?${lineMessage}" target="_blank" rel="noreferrer">💬 Request personal feedback on LINE</a>
           <a class="button secondary" href="mailto:?subject=${subject}&body=${shareText}">Share my result</a>
           <button class="button secondary" id="restart-button">Take it again</button>
         </div>
-        <p class="privacy">This is a short listening snapshot, not a formal proficiency certification.</p>
+        <p class="privacy">Your range is a listening-only GSE estimate from this short assessment, not a complete English proficiency certification.</p>
         <details class="review">
           <summary>Review my answers</summary>
           <div class="review-list">
