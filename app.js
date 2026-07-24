@@ -69,17 +69,10 @@ function renderHome() {
   app.innerHTML = `
     <section class="screen visual-front-page" aria-label="SORA free English listening assessment">
       <div class="front-page-canvas">
-        <img src="public/sora-listening-front-page.png" alt="SORA International Academy free English listening assessment. Test your English listening and know your level in eight minutes." />
-        <a class="front-hotspot hotspot-about" href="https://sora.business/" target="_blank" rel="noreferrer"><span>About SORA</span></a>
-        <a class="front-hotspot hotspot-header-trial" href="https://forms.office.com/r/qjpXvnSNDX" target="_blank" rel="noreferrer"><span>Book a free trial lesson</span></a>
-        <button class="front-hotspot hotspot-start" id="start-button"><span>Start free assessment</span></button>
-        <a class="front-hotspot hotspot-trial" href="https://forms.office.com/r/qjpXvnSNDX" target="_blank" rel="noreferrer"><span>Book a free trial lesson</span></a>
-        <a class="front-hotspot hotspot-line" href="https://line.me/R/msg/text/?Hello%20SORA!%20I%20would%20like%20to%20learn%20more%20about%20your%20English%20courses%20and%20book%20a%20free%20trial%20lesson." target="_blank" rel="noreferrer"><span>Add SORA on LINE</span></a>
-      </div>
-      <div class="front-mobile-actions" aria-label="Assessment actions">
-        <button class="button primary" id="mobile-start-button">🎧 Start Free Assessment</button>
-        <a class="button secondary" href="https://forms.office.com/r/qjpXvnSNDX" target="_blank" rel="noreferrer">Book a Free Trial</a>
-        <a class="button line" href="https://line.me/R/msg/text/?Hello%20SORA!%20I%20would%20like%20to%20learn%20more%20about%20your%20English%20courses." target="_blank" rel="noreferrer">Open LINE</a>
+        <img src="public/sora-listening-front-page-v2.png" alt="SORA International Academy free English listening assessment. Discover your English listening level in about eight minutes and receive your result through LINE." />
+        <a class="front-hotspot hotspot-about-v2" href="https://sora.business/" target="_blank" rel="noreferrer"><span>About SORA</span></a>
+        <a class="front-hotspot hotspot-header-trial-v2" href="https://forms.office.com/pages/responsepage.aspx?id=QHgH-eWXGEuyndYQxgb9NhPg1xK4OatBjxCfgrBRSaxURDdFTVFFVUUzVE9MQTZNREhVVVdDNFNQRy4u&route=shorturl" target="_blank" rel="noreferrer"><span>Book a free trial lesson</span></a>
+        <button class="front-hotspot hotspot-start-v2" id="start-button"><span>Start free assessment</span></button>
       </div>
     </section>`;
   const startAssessment = () => {
@@ -88,7 +81,6 @@ function renderHome() {
     renderQuestion();
   };
   document.querySelector("#start-button").addEventListener("click", startAssessment);
-  document.querySelector("#mobile-start-button").addEventListener("click", startAssessment);
 }
 
 function renderQuestion() {
